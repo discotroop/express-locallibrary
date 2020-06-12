@@ -9,6 +9,19 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
+const server = "mongodb+srv://libraryUser:libraryAdmin@librarydb-b67ux.mongodb.net/local_library?retryWrites=true&w=majority";
+
+var mongoose = require('mongoose');
+var mongoDB = server;
+mongoose.connect(mongoDB, {useNewUrlParser: true});
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+// libraryUser
+// libraryAdmin
+
+// mongodb+srv://libraryUser:<password>@librarydb-b67ux.mongodb.net/<dbname>?retryWrites=true&w=majority
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
