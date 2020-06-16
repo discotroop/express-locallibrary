@@ -101,7 +101,6 @@ exports.bookinstance_delete_get = function(req, res) {
     BookInstance.findById(req.params.id)
     .populate('book')
     .exec(function (err, bookinstance) {
-    console.log("id on delete page", req.params.id)
       if (err) { return next(err); }
       if (bookinstance==null) { // No results.
           var err = new Error('Book copy not found');
@@ -118,7 +117,6 @@ exports.bookinstance_delete_post = function(req, res) {
     BookInstance.findById(req.params.id)
     .populate('book')
     .exec(function (err, bookinstance) {
-    console.log("id on delete page", bookinstance)
       if (err) { return next(err); }
       if (bookinstance==null) { // No results.
           var err = new Error('Book copy not found');
@@ -132,32 +130,6 @@ exports.bookinstance_delete_post = function(req, res) {
         });
     })
 };
-
-
-
-    
-    // async.parallel({
-    //     current_book_instance: function(callback) {
-    //       BookInstance.findById(req.body.bookinstanceid).exec(callback)
-    //     },
-
-    //     /// something in this function is fishy and it is breaking mongoose and therefore the site
-    // }, function(err, results, next) {
-    //     if (err) { return (err); }
-    //     if (results.current_book_instance.length > 1) {
-    //         res.render('bookinstance_delete', {title: 'Delete Book Instance', book_instance: results.current_book_instance });
-    //         return;
-    //     } else {
-    //     var book_url = bookinstance.book.url;
-    //     // delete book instance
-    //     BookInstance.findByIdAndRemove(req.body.bookinstanceid, function deleteBookIinstance(err) {
-    //             if (err) { return (err); }
-    //             // success go to book url
-    //             res.redirect('/catalog')
-    //         })
-    //     }
-    // });
-
 
 // Display BookInstance update form on GET.
 exports.bookinstance_update_get = function(req, res) {
