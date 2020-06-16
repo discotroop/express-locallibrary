@@ -2,6 +2,7 @@ var BookInstance = require('../models/bookinstance');
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 var Book = require('../models/book');
+var async = require('async');
 
 // Display list of all BookInstances.
 exports.bookinstance_list = function(req, res, next) {
@@ -22,6 +23,7 @@ exports.bookinstance_detail = function(req, res, next) {
     BookInstance.findById(req.params.id)
     .populate('book')
     .exec(function (err, bookinstance) {
+        console.log("id on main page", req.params.id)
       if (err) { return next(err); }
       if (bookinstance==null) { // No results.
           var err = new Error('Book copy not found');
@@ -96,13 +98,66 @@ exports.bookinstance_create_post = [
 
 // Display BookInstance delete form on GET.
 exports.bookinstance_delete_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: BookInstance delete GET');
+    BookInstance.findById(req.params.id)
+    .populate('book')
+    .exec(function (err, bookinstance) {
+    console.log("id on delete page", req.params.id)
+      if (err) { return next(err); }
+      if (bookinstance==null) { // No results.
+          var err = new Error('Book copy not found');
+          err.status = 404;
+          return next(err);
+        }
+      // Successful, so render.
+      res.render('bookinstance_delete', { title: 'Delete Book Copy '+bookinstance.book.title, bookinstance:  bookinstance});
+    })
+    
 };
 
-// Handle BookInstance delete on POST.
 exports.bookinstance_delete_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: BookInstance delete POST');
+    BookInstance.findById(req.params.id)
+    .populate('book')
+    .exec(function (err, bookinstance) {
+    console.log("id on delete page", bookinstance)
+      if (err) { return next(err); }
+      if (bookinstance==null) { // No results.
+          var err = new Error('Book copy not found');
+          err.status = 404;
+          return next(err);
+        }
+      // Successful, so render.
+      BookInstance.findByIdAndRemove(bookinstance._id, function deleteBookInstance(err) {
+        if(err) { return next(err); }
+        res.redirect('/catalog/books');
+        });
+    })
 };
+
+
+
+    
+    // async.parallel({
+    //     current_book_instance: function(callback) {
+    //       BookInstance.findById(req.body.bookinstanceid).exec(callback)
+    //     },
+
+    //     /// something in this function is fishy and it is breaking mongoose and therefore the site
+    // }, function(err, results, next) {
+    //     if (err) { return (err); }
+    //     if (results.current_book_instance.length > 1) {
+    //         res.render('bookinstance_delete', {title: 'Delete Book Instance', book_instance: results.current_book_instance });
+    //         return;
+    //     } else {
+    //     var book_url = bookinstance.book.url;
+    //     // delete book instance
+    //     BookInstance.findByIdAndRemove(req.body.bookinstanceid, function deleteBookIinstance(err) {
+    //             if (err) { return (err); }
+    //             // success go to book url
+    //             res.redirect('/catalog')
+    //         })
+    //     }
+    // });
+
 
 // Display BookInstance update form on GET.
 exports.bookinstance_update_get = function(req, res) {
