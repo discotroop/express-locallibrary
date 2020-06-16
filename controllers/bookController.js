@@ -177,7 +177,7 @@ exports.book_delete_get = function(req, res, next) {
     }, function(err, results) {
         if (err) { return next(err); }
         if (results.book==null) { // No results.
-            res.redirect('/catalog/book');
+            res.redirect('/catalog/books');
         }
         // Successful, so render.
         res.render('book_delete', { title: 'Delete Book', book: results.book,
@@ -186,7 +186,7 @@ exports.book_delete_get = function(req, res, next) {
 
 };
 
-// Handle Author delete on POST.
+// Handle Book delete on POST
 exports.book_delete_post = function(req, res, next) {
 
     async.parallel({
@@ -214,6 +214,7 @@ exports.book_delete_post = function(req, res, next) {
             })
         }
     });
+};
 
 // Display book update form on GET.
 exports.book_update_get = function(req, res, next) {
