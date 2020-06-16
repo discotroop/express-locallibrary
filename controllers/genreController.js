@@ -117,8 +117,8 @@ exports.genre_delete_get = function(req, res, next) {
           Genre.findById(req.params.id).exec(callback)
       },
     // find books in genre
-      genre_books: function(callback) {
-        Book.find({ 'author': req.params.id }).exec(callback)
+      genres_books: function(callback) {
+        Book.find({ 'genre': req.params.id }).exec(callback)
       },
   }, function(err, results) {
     // if error than err
@@ -127,7 +127,8 @@ exports.genre_delete_get = function(req, res, next) {
           res.redirect('/catalog/genres');
       }
       // Successful, so render.
-      res.render('genre_delete', { title: 'Delete Genre', genre: results.genre, genre_books: results.genre_books } );
+      res.render('genre_delete', { title: 'Delete Genre', genre: results.genre,
+      genre_books: results.genres_books } );
   });
 
 };
