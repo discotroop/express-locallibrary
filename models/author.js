@@ -34,14 +34,29 @@ AuthorSchema
 .virtual('date_of_birth_formatted')
 .get(function () {
   return this.date_of_birth ? 
-  moment(this.date_of_birth).format('MMMM Do, YYYY') : "n/a";
+  moment(this.date_of_birth).format('MMMM DD, YYYY') : "n/a";
 });
 
 AuthorSchema
 .virtual('date_of_death_formatted')
 .get(function () {
   return this.date_of_death ? 
-  moment(this.date_of_birth).format('MMMM Do, YYYY') : "n/a";
+  moment(this.date_of_birth).format('MMMM DD, YYYY') : "n/a";
+});
+
+// Virtual for formatted date for forms
+AuthorSchema
+.virtual('date_of_birth_form_formatted')
+.get(function () {
+  return this.date_of_birth ? 
+  moment(this.date_of_birth).format('YYYY-MM-DD') : "n/a";
+});
+
+AuthorSchema
+.virtual('date_of_death_form_formatted')
+.get(function () {
+  return this.date_of_death ? 
+  moment(this.date_of_birth).format('YYYY-MM-DD') : "n/a";
 });
 
 // Virtual for author's lifespan

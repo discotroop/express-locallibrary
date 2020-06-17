@@ -193,6 +193,15 @@ exports.author_update_post = [
         // Extract the validation errors from a request.
         const errors = validationResult(req);
 
+        // Create new Author Object
+        var author = new Author(
+            { first_name: req.body.first_name,
+              family_name: req.body.family_name,
+              date_of_birth: req.body.date_of_birth,
+              date_of_death: req.body.date_of_death,
+              _id:req.params.id //This is required, or a new ID will be assigned!
+             });
+
         if (!errors.isEmpty()) {
             // There are errors. Render form again with sanitized values/errors messages.
             res.render('author_form', { title: 'Create Author', author: req.body, errors: errors.array() });
@@ -200,20 +209,11 @@ exports.author_update_post = [
         }
         else {
             // Data from form is valid.
-
-            // Create an Author object with escaped and trimmed data.
-            var author = new Author(
-                {
-                    first_name: req.body.first_name,
-                    family_name: req.body.family_name,
-                    date_of_birth: req.body.date_of_birth,
-                    date_of_death: req.body.date_of_death
-                });
-            author.save(function (err) {
+            Author.findByIdAndUpdate(req.params.id, author, {}, function (err,theauthor) {
                 if (err) { return next(err); }
-                // Successful - redirect to new author record.
-                res.redirect(author.url);
-            });
+                    // Successful - redirect to book detail page.
+                    res.redirect(theauthor.url);
+                });
         }
     }
 ];
