@@ -184,3 +184,51 @@ exports.genre_update_get = function(req, res) {
 exports.genre_update_post = function(req, res) {
     res.send('NOT IMPLEMENTED: Genre update POST');
 };
+
+exports.genre_update_post = [
+  // convert author to array
+  (req, res, next) => {
+      if(!(req.body.genre instanceof Array)){
+          if(typeof req.body.genre==='undefined')
+          req.body.author=[];
+          else
+          req.body.author=new Array(req.body.author);
+      }
+      next();
+  },
+  // Validate fields.
+  validator.body('name', 'Genre name required').trim().isLength({ min: 1 }),
+
+
+  // Sanitize fields.
+  validator.sanitizeBody('name').escape(),
+
+  // Process request after validation and sanitization.
+  (req, res, next) => {
+
+      // Extract the validation errors from a request.
+      const errors = validationResult(req);
+
+      // Create new Genre Object
+      let genre = new Genre(
+        { 
+          name: req.body.name, 
+          _id: req.params.id
+        }
+      );
+
+      if (!errors.isEmpty()) {
+          // There are errors. Render form again with sanitized values/errors messages.
+          res.render('author_form', { title: 'Create Author', author: req.body, errors: errors.array() });
+          return;
+      }
+      else {
+          // Data from form is valid.
+          Genre.findByIdAndUpdate(req.params.id, genre, {}, function (err,thegenre) {
+              if (err) { return next(err); }
+                  // Successful - redirect to book detail page.
+                  res.redirect(thegenre.url);
+              });
+      }
+  }
+];
