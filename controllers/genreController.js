@@ -114,6 +114,7 @@ exports.genre_delete_get = function(req, res, next) {
   async.parallel({
     // find genre by id
       genre: function(callback) {
+        console.log("on get genre id", req.params.id)
           Genre.findById(req.params.id).exec(callback)
       },
     // find books in genre
@@ -121,7 +122,7 @@ exports.genre_delete_get = function(req, res, next) {
         Book.find({ 'genre': req.params.id }).exec(callback)
       },
   }, function(err, results) {
-    // if error than err
+    // if error than return err
       if (err) { return next(err); }
       if (results.genre==null) { // No results = redirect to genres list
           res.redirect('/catalog/genres');
@@ -137,29 +138,29 @@ exports.genre_delete_get = function(req, res, next) {
 exports.genre_delete_post = function(req, res, next) {
 
   async.parallel({
-    // find genre
+    // get genre id
       genre: function(callback) {
         Genre.findById(req.body.genreid).exec(callback)
       },
-    // find books in genre
+    // find any books in genre
       genre_books: function(callback) {
         Book.find({ 'genre': req.body.genreid }).exec(callback)
       },
       
   }, function(err, results) {
-      console.log(genre_books)
       if (err) { return next(err); }
-      // Success
+      // check if genre has books remaining
       if (results.genre_books.length > 0) {
           // IF Genre has books. Render in same way as for GET route.
-          res.render('genre_delete', { title: 'Delete Genre', genre: results.genre, genre_books: results.genre_books } );
+          res.render('genre_delete', { title: 'Delete Genre', genre: results.genre,
+          genre_books: results.genre_books } );
           return;
       }
       else {
-          // IF Genre has no books. Delete object and redirect to the list of authors.
+          // IF Genre has no books. Delete object and redirect to genres.
           Genre.findByIdAndRemove(req.body.genreid, function deleteGenre(err) {
               if (err) { return next(err); }
-              // Success - go to author list
+              // Success - go to genre list
               res.redirect('/catalog/genres')
           })
       }
