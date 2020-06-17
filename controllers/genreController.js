@@ -181,10 +181,6 @@ exports.genre_update_get = function(req, res) {
 };
 
 // Handle Genre update on POST.
-exports.genre_update_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Genre update POST');
-};
-
 exports.genre_update_post = [
   // convert author to array
   (req, res, next) => {
@@ -226,7 +222,7 @@ exports.genre_update_post = [
           // Data from form is valid.
           Genre.findByIdAndUpdate(req.params.id, genre, {}, function (err,thegenre) {
               if (err) { return next(err); }
-                  // Successful - redirect to book detail page.
+                  // Successful - redirect to genre detail page.
                   res.redirect(thegenre.url);
               });
       }
