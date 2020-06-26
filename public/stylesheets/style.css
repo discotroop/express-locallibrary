@@ -3,3 +3,13 @@
   padding: 0;
   list-style: none;
 }
+
+body {
+  background-color: green;
+}
+
+ul {
+  list-style: none;
+  font-size: 50px;
+  background-color: red;
+}
