@@ -21,6 +21,8 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 // libraryUser
 // libraryAdmin
 
+//https://levelup.gitconnected.com/everything-you-need-to-know-about-the-passport-local-passport-js-strategy-633bbab6195
+
 // mongodb+srv://libraryUser:<password>@librarydb-b67ux.mongodb.net/<dbname>?retryWrites=true&w=majority
 
 // view engine setup
